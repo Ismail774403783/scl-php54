@@ -1,4 +1,5 @@
 %if 0%{?scl:1}
+%global _scl_prefix /opt/cpanel
 %scl_package php
 %else
 %global pkg_name          %{name}
@@ -38,7 +39,7 @@
 %global _httpd_confdir     %{_root_sysconfdir}/httpd/conf.d
 %global _httpd_moddir      %{_libdir}/httpd/modules
 %global _root_httpd_moddir %{_root_libdir}/httpd/modules
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 6
 # httpd 2.4 values
 %global _httpd_apxs        %{_root_bindir}/apxs
 %global _httpd_modconfdir  %{_root_sysconfdir}/httpd/conf.modules.d
@@ -49,8 +50,6 @@
 %global _httpd_modconfdir  %{_root_sysconfdir}/httpd/conf.d
 %global _httpd_contentdir  /var/www
 %endif
-
-%global with_httpd24         0
 
 %global mysql_sock %(mysql_config --socket  2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
@@ -274,9 +273,6 @@ Requires(pre): httpd
 # Don't provides extensions, which are not shared library, as .so
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{_httpd_moddir}/.*\.so$}
-%if %{with_httpd24}
-%{?filter_provides_in: %filter_provides_in %{_httpd24_moddir}/.*\.so$}
-%endif
 %{?filter_setup}
 
 
@@ -290,35 +286,6 @@ use of PHP coding is probably as a replacement for CGI scripts.
 
 The php package contains the module (often referred to as mod_php)
 which adds support for the PHP language to system Apache HTTP Server.
-
-%if %{with_httpd24}
-%package httpd24
-Summary:  PHP module for Apache 2.4
-# All files licensed under PHP version 3.01, except
-# Zend is licensed under Zend
-# TSRM is licensed under BSD
-License:  PHP and Zend and BSD
-Group:    Development/Languages
-BuildRequires: httpd24-httpd-devel > 2.4
-Requires: httpd24-httpd-mmn = %{_httpd24_mmn}
-%{?scl:Provides: httpd24-%{scl} = %{version}-%{release}}
-Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-# For backwards-compatibility, require php-cli for the time being:
-Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
-# To ensure correct /var/lib/php/session ownership:
-Requires(pre): httpd24-httpd
-
-%description httpd24
-PHP is an HTML-embedded scripting language. PHP attempts to make it
-easy for developers to write dynamically generated web pages. PHP also
-offers built-in database integration for several commercial and
-non-commercial database management systems, so writing a
-database-enabled webpage with PHP is fairly simple. The most common
-use of PHP coding is probably as a replacement for CGI scripts.
-
-The %{?scl_prefix}php-httpd24 package contains the module (often referred to as mod_php)
-which adds support for the PHP language to Apache HTTP 2.4 Server.
-%endif
 
 %package cli
 Group: Development/Languages
@@ -941,9 +908,6 @@ mkdir \
 %if %{with_fpm}
     build-fpm \
 %endif
-%if %{with_httpd24}
-    build-httpd24 \
-%endif
     build-cgi build-apache
 
 # ----- Manage known as failed test -------
@@ -1251,25 +1215,6 @@ build --enable-embed \
 popd
 %endif
 
-### LATEST build as we need to enable the collection
-
-%if %{with_httpd24}
-. %{_scl_prefix}/httpd24/enable
-
-# Build Apache module, and the CLI SAPI, /usr/bin/php
-pushd build-httpd24
-build --with-apxs2=%{_httpd24_apxs} \
-      --libdir=%{_libdir}/php \
-      --without-mysql \
-      --disable-pdo \
-      ${without_shared}
-popd
-
-### httpd24 collection is enabled, so it must remain
-### the last SAPI to be built.
-%endif
-
-
 %check
 %if %runselftest
 cd build-apache
@@ -1359,15 +1304,6 @@ sed -e 's:/var/lib:%{_localstatedir}/lib:' \
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
-
-%if %{with_httpd24}
-install -D -m 644 php.gif $RPM_BUILD_ROOT%{_httpd24_contentdir}/icons/%{name}.gif
-install -D -m 755 build-httpd24/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd24_moddir}/lib%{name}5.so
-install -D -m 644 modconf    $RPM_BUILD_ROOT%{_httpd24_modconfdir}/10-%{name}.conf
-install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd24_confdir}/%{name}.conf
-sed -e 's:/var/lib:%{_localstatedir}/lib:' \
-    -i $RPM_BUILD_ROOT%{_httpd24_confdir}/%{name}.conf
-%endif
 
 
 %if %{with_fpm}
@@ -1626,16 +1562,6 @@ fi
 %config(noreplace) %{_httpd_modconfdir}/10-%{name}.conf
 %endif
 %{_httpd_contentdir}/icons/%{name}.gif
-
-%if %{with_httpd24}
-%files httpd24
-%defattr(-,root,root)
-%{_httpd24_moddir}/lib%{name}5.so
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
-%config(noreplace) %{_httpd24_confdir}/%{name}.conf
-%config(noreplace) %{_httpd24_modconfdir}/10-%{name}.conf
-%{_httpd24_contentdir}/icons/%{name}.gif
-%endif
 
 %files common -f files.common
 %defattr(-,root,root)
