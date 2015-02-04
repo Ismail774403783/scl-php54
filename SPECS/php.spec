@@ -16,7 +16,7 @@
 # MySQL : system or scl one, or only mysqlnd*
 # Http  : system* 2.2 of scl one (2.4 ??)
 # readline or libedit (not available for el5)
-# * for current 
+# * for current
 
 # API/ABI check
 %global apiver      20100412
@@ -143,7 +143,7 @@ Summary:  PHP scripting language for creating dynamic web sites
 Name:     %{?scl_prefix}php
 Version:  5.4.16
 # Only even release to avoid conflicts with odd release used by php/rhel7
-Release:  22%{?dist}
+Release:  23%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -296,7 +296,7 @@ Provides: %{?scl_prefix}php-pcntl, %{?scl_prefix}php-pcntl%{?_isa}
 Provides: %{?scl_prefix}php-readline, %{?scl_prefix}php-readline%{?_isa}
 
 %description cli
-The php-cli package contains the command-line interface 
+The php-cli package contains the command-line interface
 executing PHP scripts, /usr/bin/php, and the CGI interface.
 
 
@@ -466,7 +466,7 @@ Provides: %{?scl_prefix}php-pdo_sqlite, %{?scl_prefix}php-pdo_sqlite%{?_isa}
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
 a database access abstraction layer to PHP.  This module provides
-a common interface for accessing MySQL, PostgreSQL or other 
+a common interface for accessing MySQL, PostgreSQL or other
 databases.
 
 %if %{with_libmysql}
@@ -602,11 +602,11 @@ The php-interbase package contains a dynamic shared object that will add
 database support through Interbase/Firebird to PHP.
 
 InterBase is the name of the closed-source variant of this RDBMS that was
-developed by Borland/Inprise. 
+developed by Borland/Inprise.
 
-Firebird is a commercially independent project of C and C++ programmers, 
-technical advisors and supporters developing and enhancing a multi-platform 
-relational database management system based on the source code released by 
+Firebird is a commercially independent project of C and C++ programmers,
+technical advisors and supporters developing and enhancing a multi-platform
+relational database management system based on the source code released by
 Inprise Corp (now known as Borland Software Corp) under the InterBase Public
 License.
 %endif
@@ -688,6 +688,18 @@ BuildRequires: t1lib-devel
 %description gd
 The php-gd package contains a dynamic shared object that will add
 support for using the gd graphics library to PHP.
+
+%package gmp
+Summary: A module for PHP applications for using the GNU MP library
+Group: Development/Languages
+# All files licensed under PHP version 3.01
+License: PHP
+BuildRequires: gmp-devel
+Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+
+%description gmp
+These functions allow you to work with arbitrary-length integers
+using the GNU MP library.
 
 %package bcmath
 Summary: A module for PHP applications for using the bcmath library
@@ -1077,7 +1089,7 @@ ln -sf ../configure
     --with-system-tzdata \
     --with-mhash \
     $*
-if test $? != 0; then 
+if test $? != 0; then
   tail -500 config.log
   : configure failed
   exit 1
@@ -1097,8 +1109,18 @@ build --libdir=%{_libdir}/php \
       --enable-mbstring=shared \
       --enable-mbregex \
       --with-gd=shared \
+      --with-gmp=shared \
+      --enable-calendar=shared \
       --enable-bcmath=shared \
+      --with-bz2=shared \
+      --enable-ctype=shared \
       --enable-dba=shared --with-db4=%{_root_prefix} \
+      --enable-exif=shared \
+      --enable-ftp=shared \
+      --with-gettext=shared \
+      --with-iconv=shared \
+      --enable-sockets=shared \
+      --enable-tokenizer=shared \
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1111,6 +1133,8 @@ build --libdir=%{_libdir}/php \
 %endif
       --enable-dom=shared \
       --with-pgsql=shared \
+      --enable-simplexml=shared \
+      --enable-xml=shared \
       --enable-wddx=shared \
       --with-snmp=shared,%{_root_prefix} \
       --enable-soap=shared \
@@ -1153,6 +1177,7 @@ build --libdir=%{_libdir}/php \
       --with-pdo-dblib=shared,%{_root_prefix} \
 %endif
       --enable-sysvmsg=shared --enable-sysvshm=shared --enable-sysvsem=shared \
+      --enable-shmop=shared \
       --enable-posix=shared \
       --with-unixODBC=shared,%{_root_prefix} \
       --enable-intl=shared \
@@ -1171,7 +1196,10 @@ without_shared="--without-gd \
       --disable-xmlreader --disable-xmlwriter \
       --without-sqlite3 --disable-phar --disable-fileinfo \
       --disable-json --without-pspell --disable-wddx \
-      --without-curl --disable-posix \
+      --without-curl --disable-posix --disable-xml \
+      --disable-simplexml --disable-exif --without-gettext \
+      --without-iconf --disable-ftp --without-bz2 --disable-ctype \
+      --disable-shmop --disable-sockets --disable-tokenizer \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1372,6 +1400,8 @@ for mod in pgsql odbc ldap snmp xmlrpc \
 %endif
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
+    simplexml bz2 calendar ctype exif ftp gettext gmp iconv \
+    sockets tokenizer \
     pdo pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
 %if %{with_sqlite3}
     sqlite3 \
@@ -1398,20 +1428,27 @@ for mod in pgsql odbc ldap snmp xmlrpc \
 %if %{with_libmysql}
     mysql mysqli pdo_mysql \
 %endif
-    pspell curl wddx \
-    posix sysvshm sysvsem sysvmsg; do
-    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
+    pspell curl wddx xml \
+    posix shmop sysvshm sysvsem sysvmsg
+do
+    # for extension load order
+    if [ "$mod" = "wddx" ]
+    then   ini=xml_${mod}.ini
+    else   ini=${mod}.ini
+    fi
+    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini} <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
     cat > files.${mod} <<EOF
 %attr(755,root,root) %{_libdir}/php/modules/${mod}.so
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${ini}
 EOF
 done
 
 # The dom, xsl and xml* modules are all packaged in php-xml
-cat files.dom files.xsl files.xml{reader,writer} files.wddx > files.xml
+cat files.dom files.xsl files.xml{reader,writer} files.wddx \
+    files.simplexml >> files.xml
 
 # The mysql and mysqli modules are both packaged in php-mysql
 %if %{with_libmysql}
@@ -1435,7 +1472,7 @@ cat files.pdo_firebird >> files.interbase
 %endif
 
 # sysv* and posix in packaged in php-process
-cat files.sysv* files.posix > files.process
+cat files.shmop files.sysv* files.posix > files.process
 
 # Package sqlite3 and pdo_sqlite with pdo; isolating the sqlite dependency
 # isn't useful at this time since rpm itself requires sqlite.
@@ -1445,7 +1482,10 @@ cat files.sqlite3 >> files.pdo
 %endif
 
 # Package json, zip, curl, phar and fileinfo in -common.
-cat files.json files.curl files.phar files.fileinfo > files.common
+cat files.json files.curl files.phar files.fileinfo \
+    files.exif files.gettext files.iconv files.calendar \
+    files.ftp files.bz2 files.ctype files.sockets \
+    files.tokenizer > files.common
 %if %{with_zip}
 cat files.zip >> files.common
 %endif
@@ -1630,7 +1670,7 @@ fi
 %files embedded
 %defattr(-,root,root,-)
 %{_libdir}/libphp5.so
-%{_libdir}/libphp5-%{version}%{?rcver}.so
+%{_libdir}/libphp5-%{embed_version}%{?rcver}.so
 %endif
 
 %files pgsql -f files.pgsql
@@ -1658,6 +1698,7 @@ fi
 %files bcmath -f files.bcmath
 %defattr(-,root,root,-)
 %doc libbcmath_COPYING
+%files gmp -f files.gmp
 %files dba -f files.dba
 %files pdo -f files.pdo
 %if %{with_mcrypt}
