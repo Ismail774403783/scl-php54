@@ -349,7 +349,6 @@ Provides: %{?scl_prefix}php(zend-abi) = %{zendver}%{isasuffix}
 Provides: %{?scl_prefix}php(language) = %{version}
 Provides: %{?scl_prefix}php(language)%{?_isa} = %{version}
 # Provides for all builtin/shared modules:
-Provides: %{?scl_prefix}php-bz2, %{?scl_prefix}php-bz2%{?_isa}
 Provides: %{?scl_prefix}php-calendar, %{?scl_prefix}php-calendar%{?_isa}
 Provides: %{?scl_prefix}php-core = %{version}, %{?scl_prefix}php-core%{?_isa} = %{version}
 Provides: %{?scl_prefix}php-ctype, %{?scl_prefix}php-ctype%{?_isa}
@@ -412,6 +411,17 @@ Requires: pcre-devel%{?_isa} >= 8.10
 The php-devel package contains the files needed for building PHP
 extensions. If you need to compile your own PHP extensions, you will
 need to install this package.
+
+%package bz2
+Summary: A module for PHP applications that interface with .bz2 files
+Group: Development/Languages
+License: PHP
+Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+Provides: %{?scl_prefix}php-bz2, %{?scl_prefix}php-bz2%{?_isa}
+
+%description bz2
+The php-bz2 package delivers a module which will allow PHP scripts to
+interface with .bz2 files.
 
 %if %{with_imap}
 %package imap
@@ -1484,7 +1494,7 @@ cat files.sqlite3 >> files.pdo
 # Package json, zip, curl, phar and fileinfo in -common.
 cat files.json files.curl files.phar files.fileinfo \
     files.exif files.gettext files.iconv files.calendar \
-    files.ftp files.bz2 files.ctype files.sockets \
+    files.ftp files.ctype files.sockets \
     files.tokenizer > files.common
 %if %{with_zip}
 cat files.zip >> files.common
@@ -1673,6 +1683,7 @@ fi
 %{_libdir}/libphp5-%{embed_version}%{?rcver}.so
 %endif
 
+%files bz2 -f files.bz2
 %files pgsql -f files.pgsql
 %if %{with_libmysql}
 %files mysql -f files.mysql
