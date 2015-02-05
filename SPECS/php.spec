@@ -349,7 +349,6 @@ Provides: %{?scl_prefix}php(zend-abi) = %{zendver}%{isasuffix}
 Provides: %{?scl_prefix}php(language) = %{version}
 Provides: %{?scl_prefix}php(language)%{?_isa} = %{version}
 # Provides for all builtin/shared modules:
-Provides: %{?scl_prefix}php-calendar, %{?scl_prefix}php-calendar%{?_isa}
 Provides: %{?scl_prefix}php-core = %{version}, %{?scl_prefix}php-core%{?_isa} = %{version}
 Provides: %{?scl_prefix}php-ctype, %{?scl_prefix}php-ctype%{?_isa}
 Provides: %{?scl_prefix}php-curl, %{?scl_prefix}php-curl%{?_isa}
@@ -422,6 +421,17 @@ Provides: %{?scl_prefix}php-bz2, %{?scl_prefix}php-bz2%{?_isa}
 %description bz2
 The php-bz2 package delivers a module which will allow PHP scripts to
 interface with .bz2 files.
+
+%package calendar
+Summary: A module for PHP applications that need date/time calculations
+Group: Development/Languages
+License: PHP
+Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+Provides: %{?scl_prefix}php-calendar, %{?scl_prefix}php-calendar%{?_isa}
+
+%description calendar
+The php-calendar package delivers a module which will allow PHP scripts to
+do date and time conversions and calculations.
 
 %if %{with_imap}
 %package imap
@@ -1493,7 +1503,7 @@ cat files.sqlite3 >> files.pdo
 
 # Package json, zip, curl, phar and fileinfo in -common.
 cat files.json files.curl files.phar files.fileinfo \
-    files.exif files.gettext files.iconv files.calendar \
+    files.exif files.gettext files.iconv \
     files.ftp files.ctype files.sockets \
     files.tokenizer > files.common
 %if %{with_zip}
@@ -1684,6 +1694,7 @@ fi
 %endif
 
 %files bz2 -f files.bz2
+%files calendar -f files.calendar
 %files pgsql -f files.pgsql
 %if %{with_libmysql}
 %files mysql -f files.mysql
