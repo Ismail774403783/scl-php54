@@ -370,7 +370,6 @@ Provides: %{?scl_prefix}php-reflection, %{?scl_prefix}php-reflection%{?_isa}
 Provides: %{?scl_prefix}php-session, %{?scl_prefix}php-session%{?_isa}
 Provides: %{?scl_prefix}php-shmop, %{?scl_prefix}php-shmop%{?_isa}
 Provides: %{?scl_prefix}php-simplexml, %{?scl_prefix}php-simplexml%{?_isa}
-Provides: %{?scl_prefix}php-sockets, %{?scl_prefix}php-sockets%{?_isa}
 Provides: %{?scl_prefix}php-spl, %{?scl_prefix}php-spl%{?_isa}
 Provides: %{?scl_prefix}php-standard = %{version}, %{?scl_prefix}php-standard%{?_isa} = %{version}
 Provides: %{?scl_prefix}php-tokenizer, %{?scl_prefix}php-tokenizer%{?_isa}
@@ -691,6 +690,19 @@ BuildRequires: libxml2-devel
 %description soap
 The php-soap package contains a dynamic shared object that will add
 support to PHP for using the SOAP web services protocol.
+
+%package sockets
+Summary: A module for PHP applications that need low-level access to sockets
+Group: Development/Languages
+License: PHP
+Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+Provides: %{?scl_prefix}php-sockets, %{?scl_prefix}php-sockets%{?_isa}
+
+%description sockets
+The php-sockets package delivers a module which will allow PHP scripts
+access to a low-level interface to the socket communication functions
+based on the popular BSD sockets, providing the possibility to act as
+a socket server as well as a client.
 
 %if %{with_interbase}
 %package interbase
@@ -1590,7 +1602,7 @@ cat files.sqlite3 >> files.pdo
 
 # Package json, zip, and phar in -common.
 cat files.json files.phar \
-    files.ctype files.sockets \
+    files.ctype \
     files.tokenizer > files.common
 %if %{with_zip}
 cat files.zip >> files.common
@@ -1787,6 +1799,7 @@ fi
 %files ftp -f files.ftp
 %files gettext -f files.gettext
 %files iconv -f files.iconv
+%files sockets -f files.sockets
 %files pgsql -f files.pgsql
 %if %{with_libmysql}
 %files mysql -f files.mysql
