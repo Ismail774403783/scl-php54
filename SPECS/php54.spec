@@ -1,3 +1,4 @@
+%{!?scl:%global scl php54}
 %if 0%{?scl:1}
 %global _scl_prefix /opt/cpanel
 %scl_package php
@@ -235,7 +236,7 @@ Patch129: php-5.4.16-CVE-2014-3710.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}, gmp-devel
+BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}, gmp-devel, scl-utils-build
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 BuildRequires: libstdc++-devel, openssl-devel
 %if %{with_sqlite3}
