@@ -139,7 +139,7 @@ Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.38
-Release:  3%{?dist}
+Release:  4%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -218,6 +218,8 @@ Requires(pre): ea-webserver
 # For backwards-compatibility, require php-cli for the time being:
 Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
 
+# For the php-cli wrapper rpm
+Requires: php-cli
 
 # Don't provides extensions, which are not shared library, as .so
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
@@ -1785,6 +1787,9 @@ fi
 
 
 %changelog
+* Mon Jul 27 2015 Darren Mobley <darren@cpanel.net> 5.4.38-4
+- Added php-cli requirement
+
 * Tue Jun 02 2015 S. Kurt Newman <kurt.newman@cpanel.net> 5.4.38-3
 - Fix macros.php syntax error
 
