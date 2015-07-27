@@ -139,7 +139,7 @@ Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.38
-Release:  4%{?dist}
+Release:  5%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -219,7 +219,7 @@ Requires(pre): ea-webserver
 Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
 
 # For the php-cli wrapper rpm
-Requires: php-cli
+Requires: ea-php-cli
 
 # Don't provides extensions, which are not shared library, as .so
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
@@ -1787,6 +1787,9 @@ fi
 
 
 %changelog
+* Mon Jul 27 2015 Darren Mobley <darren@cpanel.net> 5.4.38-5
+- Fixed name for "ea-php-cli" in requirement
+
 * Mon Jul 27 2015 Darren Mobley <darren@cpanel.net> 5.4.38-4
 - Added php-cli requirement
 
