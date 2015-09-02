@@ -138,8 +138,8 @@
 Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
-Version:  5.4.38
-Release:  7%{?dist}
+Version:  5.4.44
+Release:  1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1788,6 +1788,9 @@ fi
 
 
 %changelog
+* Tue Sep 01 2015 Kurt Newman <kurt.newman@cpanel.net> - 5.4.44-1
+- Updated to version 5.4.44 via update_pkg.pl
+
 * Thu Aug 06 2015 Trinity Quirk <trinity.quirk@cpanel.net> - 5.4.38-7
 - Enabled mcrypt for all builds
 
