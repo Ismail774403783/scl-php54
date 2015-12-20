@@ -139,7 +139,7 @@ Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
-Release:  6%{?dist}
+Release:  7%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -214,6 +214,7 @@ Provides: %{?scl_prefix}mod_php = %{version}-%{release}
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 # To ensure correct /var/lib/php/session ownership:
 Requires(pre): ea-webserver
+Requires: ea-apache24-mpm = forked
 %endif
 
 # For backwards-compatibility, require php-cli for the time being:
@@ -1792,20 +1793,23 @@ fi
 
 
 %changelog
+* Thu Dec 17 2015 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-7
+- mod_php requires a non-threaded Apache mpm (EA-3982)
+
 * Thu Dec 17 2015 Jacob Perkins <jacob.perkins@cpanel.net> - 5.4.45-6
-- Enabled short_open_tags
+- Enabled short_open_tags (ZC-1283)
 
 * Fri Dec 11 2015 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-5
-- Disable ZTS support
+- Disable ZTS support (EA-3790)
 
 * Wed Dec 09 2015 Dan Muey <dan@cpanel.net> - 5.4.45-4
-- make ea-php5x-php-fpm depend on ea-php5X-php-cli
+- make ea-php5x-php-fpm depend on ea-php5X-php-cli (EA-3836)
 
 * Fri Nov 13 2015 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-3
-- Rename www.conf to www.conf.example
+- Rename www.conf to www.conf.example (ZC-1204)
 
 * Mon Oct 12 2015 Dan Muey <dan@cpanel.net> - 5.4.45-2
-- Use libphp5.so as module name for simplicity/consistency
+- Use libphp5.so as module name for simplicity/consistency (EA-3750)
 
 * Fri Sep 04 2015 Jacob Perkins <jacob.perkins@cpanel.net> - 5.4.45-1
 - Updated to version 5.4.45 via update_pkg.pl
