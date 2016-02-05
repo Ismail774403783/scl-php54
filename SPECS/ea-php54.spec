@@ -7,7 +7,11 @@
 # Force Software Collections on
 %global _scl_prefix %{ns_dir}
 %global scl %{ns_name}-%{pkg}
-%scl_package %{scl}
+# HACK: OBS Doesn't support macros in BuildRequires statements, so we have
+#       to hard-code it here.
+# https://en.opensuse.org/openSUSE:Specfile_guidelines#BuildRequires
+%global scl_prefix %{scl}-
+%scl_package php
 
 # API/ABI check
 %global apiver      20100412
@@ -54,12 +58,6 @@
 %global with_libmysql  0
 
 
-%if 0%{?rhel} < 7
-# only fedora and rhel < 7 have uw-imap
-%global with_imap      1
-%else
-%global with_imap      0
-%endif
 %if 0%{?scl:1}
 %global with_embed     0
 %else
@@ -139,7 +137,7 @@ Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
-Release:  9%{?dist}
+Release:  10%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -252,7 +250,7 @@ Provides: %{?scl_prefix}php-cgi = %{version}-%{release}, %{?scl_prefix}php-cgi%{
 Provides: %{?scl_prefix}php-pcntl = %{version}-%{release} , %{?scl_prefix}php-pcntl%{?_isa} = %{version}-%{release}
 Provides: %{?scl_prefix}php-readline = %{version}-%{release}, %{?scl_prefix}php-readline%{?_isa} = %{version}-%{release}
 
-# For the php-cli wrapper rpm
+# For the ea-php-cli wrapper rpm
 Requires: ea-php-cli
 
 %description cli
@@ -468,21 +466,22 @@ systems may not work as you expect. In such case, it would be a good
 idea to install the GNU libiconv library. It will most likely end up
 with more consistent results.
 
-%if %{with_imap}
 %package imap
 Summary: A module for PHP applications that use IMAP
 Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
+Provides: %{?scl_prefix}php-imap%{?_isa} = %{version}-%{release}
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-BuildRequires: krb5-devel, openssl-devel, libc-client-devel
+Requires: %{?scl_prefix}libc-client%{?_isa}
+BuildRequires: krb5-devel%{?_isa}, openssl-devel%{?_isa}
+BuildRequires: %{?scl_prefix}libc-client-devel%{?_isa}
 Conflicts: %{?scl_prefix}php-recode = %{version}-%{release}
 
 %description imap
 The php-imap module will add IMAP (Internet Message Access Protocol)
 support to PHP. IMAP is a protocol for retrieving and uploading e-mail
 messages on mail servers. PHP is an HTML-embedded scripting language.
-%endif
 
 %package ldap
 Summary: A module for PHP applications that use LDAP
@@ -1097,7 +1096,7 @@ ln -sf ../configure
     --with-config-file-scan-dir=%{_sysconfdir}/php.d \
     --disable-debug \
     --with-pic \
-    --disable-rpath \
+    --enable-rpath=%{_libdir} \
     --without-pear \
     --with-bz2 \
     --with-freetype-dir=%{_root_prefix} \
@@ -1146,9 +1145,8 @@ pushd build-cgi
 
 build --libdir=%{_libdir}/php \
       --enable-pcntl \
-%if %{with_imap}
-      --with-imap=shared --with-imap-ssl \
-%endif
+      --with-imap=shared,%{_prefix} \
+      --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
 %if %{with_libgd}
@@ -1445,10 +1443,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 %endif
 
 # Generate files lists and stub .ini files for each subpackage
-for mod in pgsql odbc ldap snmp xmlrpc \
-%if %{with_imap}
-    imap \
-%endif
+for mod in pgsql odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     simplexml bz2 calendar ctype exif ftp gettext gmp iconv \
@@ -1490,11 +1485,15 @@ do
     then   ini=xml_${mod}.ini
     else   ini=${mod}.ini
     fi
-    # some extensions have their own config file
-    if [ -f ${ini} ]; then
-      cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini}
+    # Some extensions have their own config file
+    #
+    # NOTE: rpmlint complains about the spec file using %{_sourcedir} macro.
+    #       However, our usage acceptable given the transient nature of the ini files.
+    #       https://fedoraproject.org/wiki/Packaging:RPM_Source_Dir?rd=PackagingDrafts/RPM_Source_Dir
+    if [ -f %{_sourcedir}/$ini ]; then
+      cp -p %{_sourcedir}/$ini %{buildroot}%{_sysconfdir}/php.d/$ini
     else
-      cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini} <<EOF
+      cat > %{buildroot}%{_sysconfdir}/php.d/$ini <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
@@ -1742,9 +1741,7 @@ fi
 %files mysql -f files.mysql
 %endif
 %files odbc -f files.odbc
-%if %{with_imap}
 %files imap -f files.imap
-%endif
 %files ldap -f files.ldap
 %files snmp -f files.snmp
 %files xml -f files.xml
@@ -1795,6 +1792,10 @@ fi
 
 
 %changelog
+* Fri Jan 05 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-10
+- Added imap extension for all CentOS versions.  It now depends on
+  our internal SCL libc-client package.
+
 * Tue Feb 09 2016 Dan Muey <dan@cpanel.net> - 5.4.45-9
 - Add story to previous changelog entry
 
