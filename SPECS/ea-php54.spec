@@ -1796,7 +1796,7 @@ fi
 
 %changelog
 * Tue Feb 02 2016 David Nielson <david.nielson@cpanel.net> - 5.4.45-8
-- Improve DSO conflicts
+- Improve DSO conflicts (EA-3751)
 
 * Thu Dec 17 2015 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-7
 - mod_php requires a non-threaded Apache mpm (EA-3982)
