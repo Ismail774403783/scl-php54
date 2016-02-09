@@ -139,7 +139,7 @@ Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
-Release:  7%{?dist}
+Release:  8%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -211,6 +211,8 @@ BuildRequires: ea-apache24-devel
 # for us.
 Requires: ea-apache24-mmn = %{_httpd_mmn}
 Provides: %{?scl_prefix}mod_php = %{version}-%{release}
+Provides: ea-mod_php%{?_isa} = %{version}-%{release}
+Conflicts: ea-mod_php
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 # To ensure correct /var/lib/php/session ownership:
 Requires(pre): ea-webserver
@@ -1793,6 +1795,9 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 David Nielson <david.nielson@cpanel.net> - 5.4.45-8
+- Improve DSO conflicts
+
 * Thu Dec 17 2015 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-7
 - mod_php requires a non-threaded Apache mpm (EA-3982)
 
