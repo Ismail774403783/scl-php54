@@ -1792,7 +1792,7 @@ fi
 
 
 %changelog
-* Fri Jan 05 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-10
+* Wed Feb 10 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-10
 - Added imap extension for all CentOS versions.  It now depends on
   our internal SCL libc-client package.
 
