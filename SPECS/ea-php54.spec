@@ -136,7 +136,7 @@ Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
-Release:  13%{?dist}
+Release:  14%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1786,6 +1786,9 @@ fi
 
 
 %changelog
+* Tue May 31 2016 Jacob Perkins <jacob.perkins@cpanel.net> 5.4.45-14
+- Bumped Release Number for consistency
+
 * Wed May 25 2016 Jacob Perkins <jacob.perkins@cpanel.net> 5.4.45-13
 - Enabled LiteSpeed Module
 
