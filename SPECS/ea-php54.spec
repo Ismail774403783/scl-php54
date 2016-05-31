@@ -45,6 +45,9 @@
 
 %global mysql_sock %(mysql_config --socket  2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
+# Build for LiteSpeed Web Server (LSAPI)
+%global with_lsws     1
+
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
@@ -133,7 +136,7 @@ Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
-Release:  12%{?dist}
+Release:  13%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -286,6 +289,17 @@ Requires(postun): initscripts
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
 implementation with some additional features useful for sites of
 any size, especially busier sites.
+%endif
+
+%if %{with_lsws}
+%package litespeed
+Summary: LiteSpeed Web Server PHP support
+Group: Development/Languages
+Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+
+%description litespeed
+The %{?scl_prefix}php-litespeed package provides the %{_bindir}/lsphp command
+used by the LiteSpeed Web Server (LSAPI enabled PHP).
 %endif
 
 %package common
@@ -1221,6 +1235,9 @@ without_shared="--without-gd \
 pushd build-apache
 build --with-apxs2=%{_httpd_apxs} \
       --libdir=%{_libdir}/php \
+%if %{with_lsws}
+      --with-litespeed \
+%endif
 %if %{with_libmysql}
       --enable-pdo=shared \
       --with-mysql=shared,%{_root_prefix} \
@@ -1350,6 +1367,9 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 
+%if %{with_lsws}
+install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
+%endif
 
 %if %{with_fpm}
 # PHP-FPM stuff
@@ -1683,6 +1703,12 @@ fi
 %{_datadir}/fpm/status.html
 %endif
 
+%if %{with_lsws}
+%files litespeed
+%defattr(-,root,root,-)
+%{_bindir}/lsphp
+%endif
+
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
@@ -1760,6 +1786,9 @@ fi
 
 
 %changelog
+* Wed May 25 2016 Jacob Perkins <jacob.perkins@cpanel.net> 5.4.45-13
+- Enabled LiteSpeed Module
+
 * Wed Apr 06 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-12
 - Now uses bundled gd (ZC-1562)
 - Updated descriptions to use scl_prefix macros (like php7)
