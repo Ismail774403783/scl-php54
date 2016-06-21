@@ -136,7 +136,9 @@ Summary:  PHP scripting language for creating dynamic web sites
 Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
-Release:  14%{?dist}
+# Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
+%define release_prefix 15
+Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1786,6 +1788,9 @@ fi
 
 
 %changelog
+* Mon Jun 20 2016 Dan Muey <dan@cpanel.net> - 5.4.45-15
+- EA-4383: Update Release value to OBS-proof versioning
+
 * Tue May 31 2016 Jacob Perkins <jacob.perkins@cpanel.net> 5.4.45-14
 - Bumped Release Number for consistency
 
