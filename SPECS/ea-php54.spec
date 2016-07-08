@@ -137,7 +137,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 18
+%define release_prefix 19
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -171,6 +171,7 @@ Patch43: php-5.4.0-phpize.centos.patch
 Patch100: php-5.4.x-mail-header.cpanel.patch
 Patch101: php-5.x-disable-zts.patch
 Patch102: php-5.4.x-ea4-ini.patch 
+Patch104: php-5.4.x-fpm-user-ini-docroot.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -942,6 +943,7 @@ inside them.
 %patch100 -p1 -b .cpanelmailheader
 %patch101 -p1 -b .disablezts
 %patch102 -p1 -b .cpanelea4ini
+%patch104 -p1 -b .fpmuserini
 
 
 # Prevent %%doc confusion over LICENSE files
@@ -1786,6 +1788,9 @@ fi
 
 
 %changelog
+* Fri Jul 08 2016 Darren Mobley <darren@cpanel.net> - 5.4.45-19
+- Applied patch in spec from from previous version
+
 * Thu Jun 30 2016 Julian Brown <julian.brown@cpanel.net> - 5.4.45-18
 - Disallow php-fpm from loading .user.ini files outside of homedir
 
