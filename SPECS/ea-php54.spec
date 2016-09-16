@@ -137,7 +137,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 20
+%define release_prefix 21
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -172,6 +172,7 @@ Patch100: php-5.4.x-mail-header.cpanel.patch
 Patch101: php-5.x-disable-zts.patch
 Patch102: php-5.4.x-ea4-ini.patch 
 Patch104: php-5.4.x-fpm-user-ini-docroot.patch
+Patch105: php-5.4.x-fpm-jailshell.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -944,7 +945,7 @@ inside them.
 %patch101 -p1 -b .disablezts
 %patch102 -p1 -b .cpanelea4ini
 %patch104 -p1 -b .fpmuserini
-
+%patch105 -p1 -b .fpmjailshell
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1788,6 +1789,9 @@ fi
 
 
 %changelog
+* Tue Sep 13 2016 Matt Dees <matt@cpanel.net> - 5.4.45-21
+- Force users on jailshell and noshell to be chrooted when using php-fpm
+
 * Thu Sep 01 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-20
 - Changed php-fpm.d directory to 0710 (EA-5097)
 
