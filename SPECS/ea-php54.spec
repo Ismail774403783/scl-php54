@@ -137,7 +137,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 24
+%define release_prefix 25
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1790,6 +1790,9 @@ fi
 
 
 %changelog
+* Fri Nov 18 2016 Matt Dees <matt.dees@cpanel.net> 5.4.45-25
+- Fix erronous getpwnam message in php-fpm jailshell code
+
 * Fri Nov 18 2016 Edwin Buck <e.buck@cpanel.net> 5.4.45-24
 - Make php-cli require php-litespeed
 
