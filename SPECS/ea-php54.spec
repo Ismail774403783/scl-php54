@@ -137,7 +137,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 22
+%define release_prefix 25
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -254,6 +254,8 @@ Provides: %{?scl_prefix}php-readline = %{version}-%{release}, %{?scl_prefix}php-
 
 # For the ea-php-cli wrapper rpm
 Requires: ea-php-cli
+Requires: ea-php-cli-lsphp
+Requires: %{?scl_prefix}php-litespeed = %{version}-%{release}
 
 %description cli
 The %{?scl_prefix}php-cli package contains the command-line interface
@@ -1100,7 +1102,6 @@ ln -sf ../configure
     --enable-gd-native-ttf \
     --without-gdbm \
     --with-gettext \
-    --with-gmp \
     --with-iconv \
     --with-jpeg-dir=%{_root_prefix} \
     --with-openssl \
@@ -1114,7 +1115,6 @@ ln -sf ../configure
     --enable-sockets \
     --with-kerberos \
     --enable-shmop \
-    --enable-calendar \
     --with-libxml-dir=%{_root_prefix} \
     --enable-xml \
     --with-system-tzdata \
@@ -1233,7 +1233,8 @@ without_shared="--without-gd \
       --disable-simplexml --disable-exif --without-gettext \
       --without-iconv --disable-ftp --without-bz2 --disable-ctype \
       --disable-shmop --disable-sockets --disable-tokenizer \
-      --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
+      --disable-sysvmsg --disable-sysvshm --disable-sysvsem \
+      --without-gmp --disable-calendar"
 
 %if %{with_httpd}
 # Build Apache module, and the CLI SAPI, /usr/bin/php
@@ -1789,6 +1790,16 @@ fi
 
 
 %changelog
+* Fri Nov 18 2016 Matt Dees <matt.dees@cpanel.net> 5.4.45-25
+- Fix erronous getpwnam message in php-fpm jailshell code
+
+* Fri Nov 18 2016 Edwin Buck <e.buck@cpanel.net> 5.4.45-24
+- Make php-cli require php-litespeed
+
+* Thu Nov 17 2016 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.45-23
+- Ensure the same extensions are compiled statically across all
+  SAPI types (EA-5587)
+
 * Wed Sep 28 2016 Jacob Perkins <jacob.perkins@cpanel.net> 5.4.45-22
 - Set register_argc_argv default on to match EasyApache 3
 
