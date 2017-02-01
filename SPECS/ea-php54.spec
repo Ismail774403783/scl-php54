@@ -76,8 +76,9 @@
 %global with_interbase 0
 %global with_mssql     0
 %endif
-%if 0%{?fedora} || 0%{?rhel} == 6
+%if 0%{?fedora} || 0%{?rhel} >= 6
 %global with_tidy      1
+%global libtidy_prefix /opt/cpanel/libtidy
 %else
 %global with_tidy      0
 %endif
@@ -137,7 +138,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 26
+%define release_prefix 27
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -828,7 +829,7 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-BuildRequires: libtidy-devel
+BuildRequires: %{ns_name}-libtidy-devel
 
 %description tidy
 The %{?scl_prefix}php-tidy package contains a dynamic shared object that will add
@@ -1202,7 +1203,7 @@ build --libdir=%{_libdir}/php \
       --with-mcrypt=shared,%{mcrypt_prefix} \
 %endif
 %if %{with_tidy}
-      --with-tidy=shared,%{_root_prefix} \
+      --with-tidy=shared,%{libtidy_prefix} \
 %endif
 %if %{with_mssql}
       --with-mssql=shared,%{_root_prefix} \
@@ -1780,6 +1781,9 @@ fi
 
 
 %changelog
+* Mon Jan 30 2017 Dan Muey <dan@cpanel.net> - 5.4.45-27
+- EA-5807: enable php-tidy on rhel 6 and above
+
 * Mon Dec 05 2016 Dan Muey <dan@cpanel.net> - 5.4.45-26
 - EA-3685: do not create apache user/group since we use nobody
 
