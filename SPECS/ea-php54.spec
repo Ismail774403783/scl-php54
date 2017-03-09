@@ -140,7 +140,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 29
+%define release_prefix 30
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -394,6 +394,7 @@ Group: Development/Languages
 License: PHP
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 Requires: %{ns_name}-libcurl
+BuildRequires: libssh2 libssh2-devel libidn libidn-devel
 Provides: %{?scl_prefix}php-curl = %{version}-%{release}, %{?scl_prefix}php-curl%{?_isa} = %{version}-%{release}
 
 %description curl
@@ -1785,6 +1786,9 @@ fi
 
 
 %changelog
+* Thu Mar 09 2017 Cory McIntire <cory@cpanel.net> - 5.45.45-30
+- ZC-2475: PHPs need build reqs when building for libcurl
+
 * Wed Mar 08 2017 Cory McIntire <cory@cpanel.net> - 5.45.45-29
 - EA-2422: Have PHPs use our ea-libcurl
 
