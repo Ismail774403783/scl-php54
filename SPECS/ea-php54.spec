@@ -71,12 +71,12 @@
 %global libcurl_prefix /opt/cpanel/libcurl
 %global with_mcrypt    1
 %global mcrypt_prefix  /opt/cpanel/libmcrypt
+%global with_mssql     1
+%global freetds_prefix  /opt/cpanel/freetds
 %if 0%{?fedora}
 %global with_interbase 1
-%global with_mssql     1
 %else
 %global with_interbase 0
-%global with_mssql     0
 %endif
 %if 0%{?fedora} || 0%{?rhel} >= 6
 %global with_tidy      1
@@ -140,7 +140,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 30
+%define release_prefix 31
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -848,7 +848,8 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: %{?scl_prefix}php-pdo%{?_isa} = %{version}-%{release}
-BuildRequires: freetds-devel
+BuildRequires: ea-freetds-devel ea-freetds
+Requires: ea-freetds
 Provides: %{?scl_prefix}php-pdo_dblib = %{version}-%{release}, %{?scl_prefix}php-pdo_dblib%{?_isa} = %{version}-%{release}
 
 %description mssql
@@ -1211,8 +1212,8 @@ build --libdir=%{_libdir}/php \
       --with-tidy=shared,%{libtidy_prefix} \
 %endif
 %if %{with_mssql}
-      --with-mssql=shared,%{_root_prefix} \
-      --with-pdo-dblib=shared,%{_root_prefix} \
+      --with-mssql=shared,%{freetds_prefix} \
+      --with-pdo-dblib=shared,%{freetds_prefix} \
 %endif
       --enable-sysvmsg=shared --enable-sysvshm=shared --enable-sysvsem=shared \
       --enable-shmop=shared \
@@ -1786,6 +1787,9 @@ fi
 
 
 %changelog
+* Mon Mar 27 2017 Dan Muey <dan@cpanel.net> - 5.4.45-31
+- EA-6031: Enable mssql option and use our ea-freetds instead of freetds
+
 * Thu Mar 09 2017 Cory McIntire <cory@cpanel.net> - 5.4.45-30
 - ZC-2475: PHPs need build reqs when building for libcurl
 
