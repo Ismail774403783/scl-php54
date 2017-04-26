@@ -112,13 +112,7 @@
 %global isasuffix %nil
 %endif
 
-%if 0%{?fedora} < 12 && 0%{?rhel} < 6
 %global with_dtrace 0
-%else
-%global with_dtrace 1
-%endif
-
-
 
 %if 0%{?fedora} < 16 && 0%{?rhel} < 7
 %global with_systemd 0
@@ -140,7 +134,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 31
+%define release_prefix 32
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1787,6 +1781,9 @@ fi
 
 
 %changelog
+* Tue Apr 25 2017 Jacob Perkins <jacob.perkins@cpanel.net> - 5.4.45-32
+- Disable dtrace functionality since CentOS does not provide dtrace via repos.
+
 * Mon Mar 27 2017 Dan Muey <dan@cpanel.net> - 5.4.45-31
 - EA-6031: Enable mssql option and use our ea-freetds instead of freetds
 
