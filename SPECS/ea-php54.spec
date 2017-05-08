@@ -134,7 +134,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 32
+%define release_prefix 33
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1317,6 +1317,13 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
+# Make the eaphp## symlinks
+install -d $RPM_BUILD_ROOT/usr/bin
+ln -sf /opt/cpanel/ea-php54/root/usr/bin/php $RPM_BUILD_ROOT/usr/bin/ea-php54
+install -d $RPM_BUILD_ROOT/usr/local/bin
+ln -sf /opt/cpanel/ea-php54/root/usr/bin/php-cgi $RPM_BUILD_ROOT/usr/local/bin/ea-php54
+
+
 %if %{with_embed}
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
@@ -1659,6 +1666,9 @@ fi
 %files cli
 %defattr(-,root,root)
 %{_bindir}/php
+# EA-6063: Add ea-php## binary symlinks
+/usr/bin/ea-php54
+/usr/local/bin/ea-php54
 %{_bindir}/php-cgi
 %{_bindir}/phar.phar
 %{_bindir}/phar
@@ -1781,6 +1791,9 @@ fi
 
 
 %changelog
+* Fri May 05 2017 Jacob Perkins <jacob.perkins@cpanel.net> - 5.4.45-33
+- Added ea-php54 symlinks to /usr/bin and /usr/local/bin
+
 * Tue Apr 25 2017 Jacob Perkins <jacob.perkins@cpanel.net> - 5.4.45-32
 - Disable dtrace functionality since CentOS does not provide dtrace via repos.
 
