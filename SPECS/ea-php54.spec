@@ -137,7 +137,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 40
+%define release_prefix 41
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -166,6 +166,9 @@ Patch42: php-5.3.1-systzdata-v10.centos.patch
 # Prevent pear package from dragging in devel, which drags in a lot of
 # stuff for a production machine: https://bugzilla.redhat.com/show_bug.cgi?id=657812
 Patch43: php-5.4.0-phpize.centos.patch
+
+# Add multipath ability to php5.4
+Patch44: php-5.4.x-multipath.patch
 
 # cPanel patches
 Patch100: php-5.4.x-mail-header.cpanel.patch
@@ -945,6 +948,7 @@ inside them.
 %patch7 -p1 -b .recode
 %patch42 -p1 -b .systzdata
 %patch43 -p1 -b .phpize
+%patch44 -p1 -b .multipath
 %patch100 -p1 -b .cpanelmailheader
 %patch101 -p1 -b .disablezts
 %patch102 -p1 -b .cpanelea4ini
@@ -1793,6 +1797,9 @@ fi
 
 
 %changelog
+* Thu Sep 14 2017 Cory McIntire <cory@cpanel.net> - 5.4.45-41
+- EA-6805: Apply PHP_INI_SCAN_DIR patch to PHP 5.4
+
 * Wed Aug 16 2017 Dan Muey <dan@cpanel.net> - 5.4.45-40
 - EA-4197: make php.ini directives consistent w/ other versions
 
