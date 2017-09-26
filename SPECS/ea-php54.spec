@@ -137,7 +137,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 41
+%define release_prefix 42
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -954,6 +954,7 @@ inside them.
 %patch102 -p1 -b .cpanelea4ini
 %patch104 -p1 -b .fpmuserini
 %patch105 -p1 -b .fpmjailshell
+sed -i 's/buffio.h/tidybuffio.h/' ext/tidy/*.c
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1797,6 +1798,9 @@ fi
 
 
 %changelog
+* Tue Sep 26 2017 Dan Muey <dan@cpanel.net> - 5.4.45-42
+- EA-6819: Patch to support libtidy 5.4.0
+
 * Thu Sep 14 2017 Cory McIntire <cory@cpanel.net> - 5.4.45-41
 - EA-6805: Apply PHP_INI_SCAN_DIR patch to PHP 5.4
 
