@@ -137,7 +137,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 42
+%define release_prefix 43
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1798,6 +1798,9 @@ fi
 
 
 %changelog
+* Fri Oct 13 2017 Tim Mullin <tim@cpanel.net> - 5.4.45-43
+- HB-2873: Added network-online.target to "After" in the service file
+
 * Tue Sep 26 2017 Dan Muey <dan@cpanel.net> - 5.4.45-42
 - EA-6819: Patch to support libtidy 5.4.0
 
