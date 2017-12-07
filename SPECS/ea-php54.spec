@@ -137,7 +137,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 45
+%define release_prefix 46
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -176,6 +176,7 @@ Patch101: php-5.x-disable-zts.patch
 Patch102: php-5.4.x-ea4-ini.patch
 Patch104: php-5.4.x-fpm-user-ini-docroot.patch
 Patch105: php-5.4.x-fpm-jailshell.patch
+Patch106: php-5.4.45-ftp-init-openssl.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -954,6 +955,7 @@ inside them.
 %patch102 -p1 -b .cpanelea4ini
 %patch104 -p1 -b .fpmuserini
 %patch105 -p1 -b .fpmjailshell
+%patch106 -p1 -b .ftpinitopenssl
 sed -i 's/buffio.h/tidybuffio.h/' ext/tidy/*.c
 
 # Prevent %%doc confusion over LICENSE files
@@ -1798,6 +1800,9 @@ fi
 
 
 %changelog
+* Thu Dec 07 2017 <dan@cpanel.net> - 5.4.45-46
+- EA-7008: init openssl for FTP like 7.x does
+
 * Mon Nov 06 2017 <dan@cpanel.net> - 5.4.45-45
 - EA-6812: build PHP against ea-openssl like Apache
 
