@@ -137,7 +137,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 50
+%define release_prefix 51
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -183,6 +183,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: bzip2-devel, %{ns_name}-libcurl, %{ns_name}-libcurl-devel, %{db_devel}, gmp-devel
 
+Requires: ea-openssl
 BuildRequires: libstdc++-devel,ea-openssl,  ea-openssl-devel, scl-utils-build
 %if %{with_sqlite3}
 # For SQLite3 extension
@@ -492,6 +493,7 @@ License: PHP
 Provides: %{?scl_prefix}php-imap%{?_isa} = %{version}-%{release}
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 Requires: %{?scl_prefix}libc-client%{?_isa}
+Requires: ea-openssl
 BuildRequires: krb5-devel%{?_isa},ea-openssl,  ea-openssl-devel%{?_isa}
 BuildRequires: %{?scl_prefix}libc-client-devel%{?_isa}
 Conflicts: %{?scl_prefix}php-recode = %{version}-%{release}
@@ -507,6 +509,7 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+Requires: ea-openssl
 BuildRequires: cyrus-sasl-devel, openldap-devel,ea-openssl,  ea-openssl-devel
 
 %description ldap
@@ -602,6 +605,7 @@ License: PHP
 Requires: %{?scl_prefix}php-pdo%{?_isa} = %{version}-%{release}
 Provides: %{?scl_prefix}php_database = %{version}-%{release}
 Provides: %{?scl_prefix}php-pdo_pgsql = %{version}-%{release}, %{?scl_prefix}php-pdo_pgsql%{?_isa} = %{version}-%{release}
+Requires: ea-openssl
 BuildRequires: krb5-devel,ea-openssl,  ea-openssl-devel, postgresql-devel
 
 %description pgsql
@@ -1801,6 +1805,9 @@ fi
 %endif
 
 %changelog
+* Tue Mar 06 2018 Daniel Muey <dan@cpanel.net> - 5.4.45-51
+- ZC-3475: Update for ea-openssl shared object
+
 * Fri Jan 19 2018 <darren@cpanel.net> - 5.4.45-50
 - HB-3287: Increase open file limit for php-fpm by default
 
