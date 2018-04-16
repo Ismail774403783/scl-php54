@@ -129,8 +129,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%define ea_openssl_ver 1.0.2n-3
-%define ea_libcurl_ver 7.58.0-5
+%define ea_openssl_ver 1.0.2o-2
+%define ea_libcurl_ver 7.59.0-2
 
 Summary:  PHP scripting language for creating dynamic web sites
 %if %{with_httpd}
@@ -140,7 +140,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 53
+%define release_prefix 54
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1819,8 +1819,11 @@ fi
 %endif
 
 %changelog
-* Wed Apr 18 2018 Cory McIntire <cory@cpanel.net> - 5.4.45-53
+* Wed Apr 18 2018 Cory McIntire <cory@cpanel.net> - 5.4.45-54
 - ZC-3600: Update litespeed to the latest version (7.1).
+
+* Mon Apr 16 2018 Rishwanth Yeddula <rish@cpanel.net> - 5.4.45-53
+- EA-7382: Update dependency on ea-openssl to require the latest version with versioned symbols.
 
 * Mon Mar 20 2018 Cory McIntire <cory@cpanel.net> - 5.4.45-52
 - ZC-3552: Added versioning to ea-openssl and libcurl requirements.
