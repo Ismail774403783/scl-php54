@@ -140,7 +140,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 58
+%define release_prefix 59
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1825,6 +1825,9 @@ fi
 %endif
 
 %changelog
+* Mon Apr 22 2019 Tim Mullin <tim@cpanel.net> - 5.4.45-59
+- EA-8342: Update litespeed to new upstream update of 7.3
+
 * Tue Apr 16 2019 Tim Mullin <tim@cpanel.net> - 5.4.45-58
 - EA-8342: Update litespeed to 7.3
 
