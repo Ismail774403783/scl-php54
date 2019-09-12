@@ -140,7 +140,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 63
+%define release_prefix 64
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1298,6 +1298,7 @@ build --enable-fpm \
       --libdir=%{_libdir}/php \
       --without-mysql \
       --disable-pdo \
+      --enable-pcntl \
       ${without_shared}
 popd
 %endif
@@ -1825,6 +1826,9 @@ fi
 %endif
 
 %changelog
+* Thu Sep 12 2019 Tim Mullin <tim@cpanel.net> - 5.4.45-64
+- EA-8549: Build php-fpm with pcntl
+
 * Mon Jul 22 2019 Cory McIntire <cory@cpanel.net> - 5.4.45-63
 - EA-8576: Update litespeed from upstream to 7.5
 
