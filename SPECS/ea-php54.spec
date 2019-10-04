@@ -140,7 +140,7 @@ Vendor:   cPanel, Inc.
 Name:     %{?scl_prefix}php
 Version:  5.4.45
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4576 for more details
-%define release_prefix 64
+%define release_prefix 65
 Release: %{release_prefix}%{?dist}.cpanel
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1826,6 +1826,9 @@ fi
 %endif
 
 %changelog
+* Thu Oct 03 2019 Daniel Muey <dan@cpanel.net> - 5.4.45-65
+- ZC-4361: Fix bogus changelog dates
+
 * Thu Sep 12 2019 Tim Mullin <tim@cpanel.net> - 5.4.45-64
 - EA-8549: Build php-fpm with pcntl
 
@@ -1862,7 +1865,7 @@ fi
 * Mon Apr 16 2018 Rishwanth Yeddula <rish@cpanel.net> - 5.4.45-53
 - EA-7382: Update dependency on ea-openssl to require the latest version with versioned symbols.
 
-* Mon Mar 20 2018 Cory McIntire <cory@cpanel.net> - 5.4.45-52
+* Tue Mar 20 2018 Cory McIntire <cory@cpanel.net> - 5.4.45-52
 - ZC-3552: Added versioning to ea-openssl and libcurl requirements.
 
 * Tue Mar 06 2018 Daniel Muey <dan@cpanel.net> - 5.4.45-51
@@ -1886,7 +1889,7 @@ fi
 * Mon Nov 06 2017 <dan@cpanel.net> - 5.4.45-45
 - EA-6812: build PHP against ea-openssl like Apache
 
-* Tue Oct 14 2017 <cory@cpanel.net> - 5.4.45-44
+* Sat Oct 14 2017 <cory@cpanel.net> - 5.4.45-44
 - EA-4653: Update mail header patch for PHP 5.4
 
 * Fri Oct 13 2017 Tim Mullin <tim@cpanel.net> - 5.4.45-43
@@ -2029,10 +2032,10 @@ fi
 * Thu Aug 06 2015 Trinity Quirk <trinity.quirk@cpanel.net> - 5.4.38-7
 - Enabled mcrypt for all builds
 
-* Mon Jul 28 2015 Darren Mobley <darren@cpanel.net> 5.4.38-6
+* Tue Jul 28 2015 Darren Mobley <darren@cpanel.net> 5.4.38-6
 - Moved "ea-php-cli" to correct package
 
-* Mon Jul 28 2015 Darren Mobley <darren@cpanel.net> 5.4.38-5
+* Tue Jul 28 2015 Darren Mobley <darren@cpanel.net> 5.4.38-5
 - Fixed name for "ea-php-cli" in requirement
 
 * Mon Jul 27 2015 Darren Mobley <darren@cpanel.net> 5.4.38-4
@@ -2041,7 +2044,7 @@ fi
 * Tue Jun 02 2015 S. Kurt Newman <kurt.newman@cpanel.net> 5.4.38-3
 - Fix macros.php syntax error
 
-* Wed May 26 2015 Dan Muey <dan@cpanel.net> 5.4.38-2
+* Tue May 26 2015 Dan Muey <dan@cpanel.net> 5.4.38-2
 - Change ea-apache2 to ea-apache24
 
 * Mon Mar 30 2015 S. Kurt Newman <kurt.newman@cpanel.net> - 5.4.38-1
